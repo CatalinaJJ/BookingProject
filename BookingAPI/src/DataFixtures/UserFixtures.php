@@ -29,7 +29,7 @@ class UserFixtures extends Fixture
 
         $user->setFirstName('test');
         $user->setLastName('test');
-
+        $manager->persist($user);
         $manager->flush();
     }
 }
