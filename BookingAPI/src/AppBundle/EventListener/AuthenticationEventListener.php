@@ -30,9 +30,8 @@ class AuthenticationEventListener
         $login->setEmail($email);
         $login->setIp($this->request->getCurrentRequest()->getClientIp());
 
-        $entityManager = $this->doctrine->getManager();
-        $entityManager->persist($login);
-        $entityManager->flush();
+        $this->entityManager->persist($login);
+        $this->entityManager->flush();
     }
 
     public function onAuthenticationFailure(AuthenticationFailureEvent $event) {
