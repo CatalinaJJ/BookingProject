@@ -19,32 +19,38 @@ class TripRepository extends ServiceEntityRepository
         parent::__construct($registry, Trip::class);
     }
 
-    // /**
-    //  * @return Trip[] Returns an array of Trip objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Trip
+    public function findAvailableTrips($filter = '', $priceOrder = '', $titleOrder = '', $locationOrder = '', $priceFrom = '', $priceTo = '')
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t')
+            ->andWhere($queryBuilder->expr()->isNotNull('t.vacant_spaces'));
+        if ($filter) {
+            $queryBuilder->andWhere('t.title LIKE :filter OR t.description LIKE :filter')
+                ->setParameter('filter', '%' . $filter . '%');
+        }
+        if($priceFrom) {
+            $queryBuilder->andWhere('t.price >= :priceFrom')
+                ->setParameter('priceFrom', $priceFrom);
+        }
+        if($priceTo) {
+            $queryBuilder->andWhere('t.price <= :priceTo')
+                ->setParameter('priceTo', $priceTo);
+        }
+        if ($priceOrder) {
+            $queryBuilder->orderBy('t.price', $priceOrder);
+        }
+        if ($titleOrder) {
+            $queryBuilder->orderBy('t.title', $titleOrder);
+        }
+        if ($locationOrder) {
+            $queryBuilder->orderBy('t.location', $locationOrder);
+        }
+
+        $result = $queryBuilder->getQuery()
+            ->getResult();
+        return $result;
     }
-    */
+
+
 }

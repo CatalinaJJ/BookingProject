@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TripRepository")
@@ -17,7 +20,8 @@ class Trip
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100, unique=true)
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 
@@ -56,6 +60,16 @@ class Trip
      */
     private $vacant_spaces;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="trips")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,9 +82,7 @@ class Trip
 
     public function setSlug(string $slug): self
     {
-        $this->slug = $slug;
-
-        return $this;
+        return $this->slug;
     }
 
     public function getTitle(): ?string
@@ -153,6 +165,34 @@ class Trip
     public function setVacantSpaces(int $vacant_spaces): self
     {
         $this->vacant_spaces = $vacant_spaces;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addTrip($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeTrip($this);
+        }
 
         return $this;
     }

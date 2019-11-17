@@ -12,7 +12,6 @@ class TripType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('slug')
             ->add('title')
             ->add('description')
             ->add('start_date')
