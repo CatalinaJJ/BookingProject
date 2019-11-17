@@ -18,3 +18,12 @@ For testing:
 3. Go to /loginattempts to see failed auth.
 4. Go to /login to test the auth.
 5. All /api/* endpoints can be tested in PostMan, except the booking functionality.
+6. /api/trips - will return all available trips - that have vacant spaces.
+7. To test filtering, sorting etc. use same endpoint as on 6. with query parameters:
+  - 'filter' for keywords, 
+  - 'price=asc' for ordering (desc, alternatively)
+  - 'title=asc' (desc, alternatively)
+  - 'location=asc' (desc, alternatively)
+  - 'priceFrom', 'priceTo' for range
+  
+Using all or few of them in any combination should return the expected results.
